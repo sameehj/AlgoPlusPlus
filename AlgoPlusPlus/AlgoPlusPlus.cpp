@@ -32,6 +32,8 @@ void ExampleGraphBFS()
 	g.AddEdge(9, 8);
 
 	g.BFS(1);
+	g.DFS(1);
+
 }
 
 int main()

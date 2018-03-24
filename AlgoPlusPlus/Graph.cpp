@@ -1,6 +1,7 @@
 #include "Graph.h"
 #include <stdexcept>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -140,4 +141,40 @@ void Graph::BFS(int starting_node)
 		}
 	} while (!q.empty());
 	print_queue_layers(layers_q);
+	delete[] visited;
+}
+
+void Graph::DFSRec(set<int>* s, int current_node)
+{
+	bool has_children = false;
+	int i = 0;
+
+	if (s->count(current_node))
+	{
+		return;
+	}
+
+	s->insert(current_node);
+	cout << endl << " " << current_node;
+
+	for (i = 0; i < m_Size; i++)
+	{
+		if (m_Map[current_node][i])
+		{
+			DFSRec(s, i);
+		}
+	}
+	return;
+}
+
+void Graph::DFS(int starting_node)
+{
+	if (starting_node <= 0 || starting_node > m_Size)
+	{
+		throw std::exception("Illegal value for starting node");
+	}
+	set<int> * s = new set<int>();
+	DFSRec(s, starting_node);
+	delete s;
+	return;
 }
