@@ -16,11 +16,20 @@ int main()
 	graph.AddEdge(3, 6);
 	graph.AddEdge(6, 2);
 
-	Graph<int>::BFSiterator it = graph.begin(2);
-	while (it.hasNext())
+	cout << "BFS iteration" << endl;
+	Graph<int>::BFSiterator bfs_it = graph.begin(2);
+	while (bfs_it.hasNext())
 	{
-		cout << it.getCurrent() << endl;
-		it.next();
+		cout << bfs_it.getCurrent() << endl;
+		bfs_it.next();
+	}
+
+	cout << "DFS iteration" << endl;
+	Graph<int>::DFSiterator dfs_it = graph.beginDFS(2);
+	while (dfs_it.hasNext())
+	{
+		cout << dfs_it.getCurrent() << endl;
+		dfs_it.next();
 	}
 
 	return 0;

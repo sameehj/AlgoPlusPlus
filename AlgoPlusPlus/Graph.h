@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -79,9 +80,69 @@ public:
 		set<T> m_Visited;
 	};
 
+	class DFSiterator
+	{
+	public:
+		DFSiterator(const map<T, set<T>> &mapa, T node) :
+			m_CurrentMap(mapa)
+		{
+			map<T, set<T>>::iterator it = m_CurrentMap.find(node);
+			m_Stack.push(it->first);
+		}
+		DFSiterator(const BFSiterator& other) :
+			m_CurrentMap(other.m_CurrentMap),
+			m_Stack(other.m_Stack),
+			m_Visited(other.m_Visited)
+
+		{ }
+
+		T getCurrent()
+		{
+			return m_Stack.top();
+		}
+		bool hasNext()
+		{
+			return !m_Stack.empty();
+		}
+
+		DFSiterator& next()
+		{
+			// pop the element we should visit
+			T current = m_Stack.top();
+			m_Visited.insert(current);
+			bool unvisited_neighbours = false;
+			map<T, set<T>>::iterator it = m_CurrentMap.find(current);
+			for (auto neighbor : it->second)
+			{
+				if (m_Visited.find(neighbor) == m_Visited.end())
+				{
+					m_Stack.push(neighbor);
+					m_Visited.insert(neighbor);
+					unvisited_neighbours = true;
+					break;
+				}
+			}
+
+			if (!unvisited_neighbours)
+			{
+				m_Stack.pop();
+			}
+			return *this;
+		}
+	private:
+		map<T, set<T>> m_CurrentMap;
+		stack<T> m_Stack;
+		set<T> m_Visited;
+	};
+
 	BFSiterator begin(T node)
 	{
 		return BFSiterator(m_Map, node);
+	}
+
+	DFSiterator beginDFS(T node)
+	{
+		return DFSiterator(m_Map, node);
 	}
 
 private:
